@@ -55,7 +55,7 @@ request.setCharacterEncoding("UTF-8");
 	justify-content: space-between;
 }
 
-#top-right {
+.top-right {
 	display: flex;
 }
 
@@ -208,11 +208,10 @@ td {
 					<div id="top">
 						<div id="top-left">
 							<button
-								onclick="location.href='restarea_write.jsp?currentPage=${ currentPage }'"
+								onclick="location.href='restarea_write.jsp?currentPage=${ currentPage }&keyword=${ param.keyword }'"
 								class="btn btn-primary">휴게소 추가</button>
 						</div>
-							<div id="top-right">
-							<form action="restarea_list.jsp" id="restareaSearchFrm">
+							<form action="restarea_list.jsp" id="restareaSearchFrm" class="top-right">
 								<div id="search">
 									<i class="fa-solid fa-magnifying-glass"></i> <input type="text"
 										placeholder="휴게소명" name="keyword" id="keyword">
@@ -220,7 +219,6 @@ td {
 								<input type="text" style="display: none"> <input
 									type="button" value="검색" id="btnSearch" class="btn btn-primary">
 							</form>
-						</div>
 					</div>
 					<div id="middle">
 						<table class="table table-bordered">

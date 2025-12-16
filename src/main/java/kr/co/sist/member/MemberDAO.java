@@ -148,7 +148,9 @@ public class MemberDAO {
 		return mdDTO;
 	}// selectOneMember
 
-	public void deleteMember(String id) throws SQLException {
+	public int deleteMember(String id) throws SQLException {
+		int result = 0;
+		
 		DbConn dbCon = DbConn.getInstance("jdbc/dbcp");
 
 		Connection con = null;
@@ -167,10 +169,12 @@ public class MemberDAO {
 
 			pstmt.setString(1, id);
 			
-			pstmt.executeUpdate();
+			result = pstmt.executeUpdate();
 		} finally {
 			dbCon.dbClose(null, pstmt, con);
 		} // end finally
+		
+		return result;
 	}// deleteMember
 
 }// class

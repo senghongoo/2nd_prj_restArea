@@ -3,8 +3,6 @@ package kr.co.sist.member;
 import java.sql.SQLException;
 import java.util.List;
 
-import kr.co.sist.member.RangeDTO;
-
 public class MemberService {
 
 	private static MemberService ms;
@@ -138,8 +136,8 @@ public class MemberService {
 		MemberDAO mDAO = MemberDAO.getInstance();
 
 		try {
-			mDAO.deleteMember(id);
-			flag = true;
+			int result = mDAO.deleteMember(id);
+			flag = (result == 1) ? true : false;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} // end catch

@@ -1,10 +1,16 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<% request.setCharacterEncoding("UTF-8"); %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+
+<%
+request.setCharacterEncoding("UTF-8");
+%>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%-- <c:if test="${empty date}">
   <c:redirect url="http://192.168.10.89/team_second_prj/admin/login/login_main.jsp"/>
 </c:if> --%>
+
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
 <head>
@@ -14,14 +20,23 @@
 <title>휴게소 관리 - 휴게소 추가</title>
 
 <!-- bootstrap CDN 시작 -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+	crossorigin="anonymous">
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+	crossorigin="anonymous"></script>
 
-<!-- 링크 수정 필요 -->
-<link href="https://getbootstrap.com/docs/5.3/examples/dashboard/dashboard.css" rel="stylesheet">
+<link
+	href="https://getbootstrap.com/docs/5.3/examples/dashboard/dashboard.css"
+	rel="stylesheet">
 
 <!-- jQuery -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 <jsp:include page="../template/admin_style_css.jsp" />
 
@@ -116,12 +131,72 @@ input:not(span>input) {
 	height: 30px;
 }
 </style>
+
 <script type="text/javascript">
 	$(function() {
 		$(".frm2 td:nth-of-type(2)").attr("colspan", 3);
-		$(".pic > button, #btns > button").attr("class", "btn btn-primary");
-		$(".extra > div button").attr("class", "btn btn-light");
-		$("table").attr("class", "table");
+		$(".pic > button, #btns > button").addClass("btn btn-primary");
+		$(".extra > div button").addClass("btn btn-light");
+		$("table").addClass("table");
+		$("table").attr("style", "margin-bottom: 0px !important;");
+
+		$(".btnUpload").click(function() {
+			$(this).siblings(".upfile").click();
+		});// click
+
+		$(".upfile").change(function(evt) {
+			var file = evt.target.files[0];
+
+			if (!file) {
+				return;
+			}// end if
+
+			var reader = new FileReader();
+			var $inputText = $(this).siblings("input[type='text']");
+
+			reader.onload = function(evt) {
+				$inputText.val(file.name);
+			};
+
+			reader.readAsDataURL(file);
+		});// change
+
+		$(".addItem").click(function() {
+			var closestDiv = $(this).closest("div");
+			var siblingTable = closestDiv.siblings("table").first();
+			var clonedTable = siblingTable.clone();
+
+			clonedTable.find("input").val("");
+			clonedTable.find("input[type='checkbox']").prop("checked", false);
+
+			closestDiv.parent().append(clonedTable);
+		});// click
+
+		$(".removeItem").click(function() {
+			var closestDiv = $(this).closest("div");
+			var siblingTables = closestDiv.siblings("table");
+
+			if (confirm("선택 항목을 삭제하시겠습니까?")) {
+				var checkedCnt = siblingTables.filter(function() {
+					return $(this).find(".removeFlag").is(":checked");
+				}).length;
+
+				if (checkedCnt >= siblingTables.length) {
+					alert("최소 1개의 항목은 필수 입력입니다.");
+					siblingTables.find(".removeFlag").prop("checked", false);
+					return;
+				}// end if
+
+				siblingTables.each(function() {
+					var $table = $(this);
+					var $checkbox = $table.find(".removeFlag");
+
+					if ($checkbox.is(":checked")) {
+						$table.remove();
+					}// end if
+				});
+			}// end if
+		});// click
 	});// ready
 </script>
 </head>
@@ -148,18 +223,20 @@ input:not(span>input) {
 										<td style="width: 300px;"><input type="text"></td>
 										<td style="width: 200px;"><label>노선</label></td>
 										<td style="width: 300px;"><select class="form-select">
-												<option value="강릉선">강릉선</option>
-												<option value="경부선">경부선</option>
-												<option value="용서선">용서선</option>
-												<option value="목포선">목포선</option>
-												<option value="진주선">진주선</option>
+												<option value="경부고속도로">경부고속도로</option>
+												<option value="서해안고속도로">서해안고속도로</option>
+												<option value="영동고속도로">영동고속도로</option>
+												<option value="중부고속도로">중부고속도로</option>
+												<option value="서울양양고속도로">서울양양고속도로</option>
 										</select></td>
 									</tr>
 									<tr class="frm2">
 										<td><label>타이틀 사진</label></td>
-										<td class="pic"><label>1440x500 / png, jpg 가능</label><input
+										<td class="pic"><label>1440x500 / png, jpg 가능</label> <input
 											type="text" placeholder="첨부 파일" disabled="disabled">
-											<button>파일 첨부</button></td>
+											<input type="file" accept="image/*" name="upfile"
+											class="upfile" style="display: none" />
+											<button class="btnUpload">파일 첨부</button></td>
 									</tr>
 									<tr class="frm2">
 										<td><label>타이틀 문구</label></td>
@@ -202,20 +279,25 @@ input:not(span>input) {
 							</div>
 							<div class="extra">
 								<div>
-									<label>볼거리 리스트</label> <span><button>항목 추가</button>
-										<button>선택 항목 삭제</button></span>
+									<label>볼거리 리스트</label> <span>
+										<button class="addItem">항목 추가</button>
+										<button class="removeItem">선택 항목 삭제</button>
+									</span>
 								</div>
 								<table>
 									<tr class="frm2">
 										<td><label>볼거리명</label></td>
 										<td><input type="text"></td>
-										<td rowspan="3"><input type="checkbox"></td>
+										<td rowspan="3"><input type="checkbox" class="removeFlag">
+										</td>
 									</tr>
 									<tr>
 										<td><label>볼거리 사진</label></td>
-										<td class="pic"><label>800x500 / png, jpg 가능</label><input
+										<td class="pic"><label>800x500 / png, jpg 가능</label> <input
 											type="text" placeholder="첨부 파일" disabled="disabled">
-											<button>파일 첨부</button></td>
+											<input type="file" accept="image/*" name="upfile"
+											class="upfile" style="display: none" />
+											<button class="btnUpload">파일 첨부</button></td>
 									</tr>
 									<tr class="frm2">
 										<td><label>볼거리 문구</label></td>
@@ -225,20 +307,25 @@ input:not(span>input) {
 							</div>
 							<div class="extra">
 								<div>
-									<label>먹거리 리스트</label> <span><button>항목 추가</button>
-										<button>선택 항목 삭제</button></span>
+									<label>먹거리 리스트</label> <span>
+										<button class="addItem">항목 추가</button>
+										<button class="removeItem">선택 항목 삭제</button>
+									</span>
 								</div>
 								<table>
 									<tr class="frm2">
 										<td><label>먹거리명</label></td>
 										<td><input type="text"></td>
-										<td rowspan="3"><input type="checkbox"></td>
+										<td rowspan="3"><input type="checkbox" class="removeFlag">
+										</td>
 									</tr>
 									<tr>
 										<td><label>먹거리 사진</label></td>
-										<td class="pic"><label>800x500 / png, jpg 가능</label><input
+										<td class="pic"><label>800x500 / png, jpg 가능</label> <input
 											type="text" placeholder="첨부 파일" disabled="disabled">
-											<button>파일 첨부</button></td>
+											<input type="file" accept="image/*" name="upfile"
+											class="upfile" style="display: none" />
+											<button class="btnUpload">파일 첨부</button></td>
 									</tr>
 									<tr class="frm2">
 										<td><label>먹거리 문구</label></td>
@@ -248,20 +335,25 @@ input:not(span>input) {
 							</div>
 							<div class="extra">
 								<div>
-									<label>편의시설 리스트</label> <span><button>항목 추가</button>
-										<button>선택 항목 삭제</button></span>
+									<label>편의시설 리스트</label> <span>
+										<button class="addItem">항목 추가</button>
+										<button class="removeItem">선택 항목 삭제</button>
+									</span>
 								</div>
 								<table>
 									<tr class="frm2">
 										<td><label>편의시설명</label></td>
 										<td><input type="text"></td>
-										<td rowspan="3"><input type="checkbox"></td>
+										<td rowspan="3"><input type="checkbox" class="removeFlag">
+										</td>
 									</tr>
 									<tr>
 										<td><label>편의시설 사진</label></td>
-										<td class="pic"><label>800x500 / png, jpg 가능</label><input
+										<td class="pic"><label>800x500 / png, jpg 가능</label> <input
 											type="text" placeholder="첨부 파일" disabled="disabled">
-											<button>파일 첨부</button></td>
+											<input type="file" accept="image/*" name="upfile"
+											class="upfile" style="display: none" />
+											<button class="btnUpload">파일 첨부</button></td>
 									</tr>
 									<tr class="frm2">
 										<td><label>편의시설 문구</label></td>
@@ -271,8 +363,9 @@ input:not(span>input) {
 							</div>
 						</div>
 						<div id="bottom">
-							<div style="float: right; margin-bottom: 20px" id="btns">
-								<button>취소</button>
+							<div style="float: right; margin-bottom: 20px; margin-top: 16px"
+								id="btns">
+								<button onclick="location.href='restarea_list.jsp?currentPage=${ param.currentPage }&keyword=${ param.keyword }'">취소</button>
 								<button>미리보기</button>
 								<button>추가</button>
 							</div>

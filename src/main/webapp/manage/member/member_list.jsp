@@ -82,9 +82,11 @@ th, td {
 		});// on
 	});// ready
 
-	function rmMember(id) {
+	function rmMember(id, currentPage, totalCnt) {
 		if (confirm(id+" 회원을 삭제하시겠습니까?")) {
 			$("#id").val(id);
+			$("#currentPage").val(currentPage);
+			$("#totalCnt").val(totalCnt);
 
 			$("#frm")[0].action = "removeMemberProcess.jsp";
 			$("#frm").submit();
@@ -180,13 +182,15 @@ th, td {
 										<td><c:out value="${ mmDTO.email }"></c:out></td>
 										<td><c:out value="${ mmDTO.joinDate }"></c:out></td>
 										<td><input type="button" value="삭제하기" id="btnDelete"
-											class="btn btn-danger" onclick="event.stopPropagation(); rmMember('${ mmDTO.id }')" /></td>
+											class="btn btn-danger" onclick="event.stopPropagation(); rmMember('${ mmDTO.id }', ${ currentPage }, ${ totalCnt })" /></td>
 									</tr>
 								</c:forEach>
 							</tbody>
 						</table>
 						<form action="removeMemberProcess.jsp" id="frm">
 							<input type="hidden" name="id" id="id" style="display: none" />
+							<input type="hidden" name="currentPage" id="currentPage" style="display: none" />
+							<input type="hidden" name="totalCnt" id="totalCnt" style="display: none" />
 						</form>
 					</div>
 					<div id="bottom">
