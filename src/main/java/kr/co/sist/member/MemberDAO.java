@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import kr.co.sist.chipher.DataDecryption;
 import kr.co.sist.dao.DbConn;
+import kr.co.sist.siteProperty.SitePropertyVO;
 
 public class MemberDAO {
 

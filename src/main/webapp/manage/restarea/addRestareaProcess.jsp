@@ -43,6 +43,7 @@ private String moveFile(MultipartRequest mr, String paramName, String baseDir, S
             if(srcFile.exists()) srcFile.delete();
         }
     }
+    
     return "";
 }
 %>
@@ -57,6 +58,9 @@ if (!tempDir.exists()) {
 
 int maxSize = 1024 * 1024 * 10;
 MultipartRequest mr = new MultipartRequest(request, tempDir.getAbsolutePath(), maxSize, "UTF-8", new DefaultFileRenamePolicy());
+
+String currentPage = mr.getParameter("currentPage");
+String keyword = mr.getParameter("keyword");
 
 RestareaCreateService rcs = RestareaCreateService.getInstance();
 
@@ -140,6 +144,8 @@ if (!flag) {
     }// end for
 }// end if
 
+pageContext.setAttribute("currentPage", currentPage);
+pageContext.setAttribute("keyword", keyword);
 pageContext.setAttribute("flag", flag);
 %>
 
@@ -151,7 +157,7 @@ pageContext.setAttribute("flag", flag);
 	</c:when>
 	<c:otherwise>
 	alert("휴게소 추가 중 문제가 발생했습니다.");
-	location.href = "restarea_write.jsp";
+	location.href = "restarea_write.jsp?currentPage=${ currentPage }&keyword=${ keyword }";
 	</c:otherwise>
 	</c:choose>
 </script>

@@ -18,7 +18,8 @@
 request.setCharacterEncoding("UTF-8");
 %>
 
-<%!private String moveFile(MultipartRequest mr, String paramName, String baseDir, String subDir) {
+<%!
+private String moveFile(MultipartRequest mr, String paramName, String baseDir, String subDir) {
 		String fileName = mr.getFilesystemName(paramName);
 
 		if (fileName != null) {
@@ -41,7 +42,8 @@ request.setCharacterEncoding("UTF-8");
 			}
 		}
 		return "";
-	}%>
+	}
+%>
 
 <%
 String baseDir = "C:/dev/workspace/2nd_prj_restArea/src/main/webapp/resource/images/";
@@ -52,8 +54,7 @@ if (!tempDir.exists()) {
 } // end if
 
 int maxSize = 1024 * 1024 * 10;
-MultipartRequest mr = new MultipartRequest(request, tempDir.getAbsolutePath(), maxSize, "UTF-8",
-		new DefaultFileRenamePolicy());
+MultipartRequest mr = new MultipartRequest(request, tempDir.getAbsolutePath(), maxSize, "UTF-8", new DefaultFileRenamePolicy());
 
 RestareaCreateService rcs = RestareaCreateService.getInstance();
 
@@ -61,6 +62,10 @@ String line = mr.getParameter("line");
 int restareaCode = rcs.searchRestareaCode(line) + 1;
 
 String titleImgPath = moveFile(mr, "titleImg", baseDir, "title/");
+
+if(titleImgPath == "") {
+	titleImgPath = "title/" + mr.getParameter("titleImgTxt");
+}// end if
 
 // AmenitiesDTO 처리
 String[] amenityNames = {"sleepingRoom", "showerRoom", "restHub", "nursingRoom", "pharmacy", "agricultureMarket",
@@ -102,16 +107,23 @@ while (params.hasMoreElements()) {
 		String idx = nameParam.substring(nameParam.lastIndexOf("_") + 1);
 
 		String nameValue = mr.getParameter(nameParam);
+		String imgTxtParam = "fac" + facilityCode + "ImgTxt_" + idx;
 		String imgParam = "fac" + facilityCode + "Img_" + idx;
 		String phraseParam = "fac" + facilityCode + "Phrase_" + idx;
 
 		String subDirPath = "fac_" + facilityCode + "/";
 		String facilityImgPath = moveFile(mr, imgParam, baseDir, subDirPath);
+		
+		if(facilityImgPath == "") {
+			facilityImgPath = "fac_"+ facilityCode + "/" + mr.getParameter(imgTxtParam);
+		}// end if
 
 		efDTOList.add(new ExtraFacilitiesDTO(restareaCode, facilityCode, nameValue, facilityImgPath,
 		mr.getParameter(phraseParam)));
 	} // end if
 } // end while
+	
+Collections.reverse(efDTOList);
 %>
 
 <!DOCTYPE html>
@@ -128,6 +140,8 @@ while (params.hasMoreElements()) {
 	href="http://211.63.89.149/2nd_prj_restArea/resource/css/a_sub.css" />
 <link rel="stylesheet" type="text/css"
 	href="http://211.63.89.149/2nd_prj_restArea/resource/css/a_detail_rest.css" />
+<link rel="shortcut icon" type="image/x-icon"
+	href="http://211.63.89.149/2nd_prj_restArea/resource/images/favicon.ico" />
 
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -187,20 +201,17 @@ while (params.hasMoreElements()) {
 	<div class="preview-mode-bar">현재 화면은 [미리보기] 모드입니다. 데이터는 저장되지 않은
 		상태입니다.</div>
 
-	<main class="inner" style="margin-top: 50px;">
+	<main class="inner"
+		style="margin-top: 50px; padding-bottom: 10px !important">
 		<div class="cont" id="cont" style="width: 100%; float: none;">
-
 			<h3 class="pageTitleH3">휴게소 상세</h3>
-
 			<div class="hr">&nbsp;</div>
-
 			<h3 class="subTitleH3"><%=rdDTO.getName()%>
 				전경
 			</h3>
 			<p>
 				<img class="img100" src="../../resource/images/<%=rdDTO.getImg()%>">
 			</p>
-
 			<h3 class="subTitleH3">정보</h3>
 			<ul class="comfortable">
 				<li class="comfor1">
@@ -314,8 +325,8 @@ while (params.hasMoreElements()) {
 					%>
 					<li>
 						<p class="img">
-							<div style="width: 100px; height: 60px; background: #eee; text-align: center; line-height: 60px;"><img src="../../resource/images/<%=fac1DTO.getImg()%>" />
-						</div>
+							<img src="../../resource/images/<%=fac1DTO.getImg()%>"
+								class="img100" alt="<%=fac1DTO.getName()%>" />
 						</p>
 						<dl>
 							<dt><%=fac1DTO.getName()%></dt>
@@ -323,11 +334,10 @@ while (params.hasMoreElements()) {
 						</dl>
 					</li>
 					<%
-					} // end for
+					}
 					%>
 				</ul>
 			</div>
-
 			<div class="tour_list" id="info2">
 				<h4 class="tit_02">먹거리</h4>
 				<ul>
@@ -336,47 +346,44 @@ while (params.hasMoreElements()) {
 					%>
 					<li>
 						<p class="img">
-						<div style="width: 100px; height: 60px; background: #eee; text-align: center; line-height: 60px;">
-							<img src="../../resource/images/<%=fac2DTO.getImg()%>" />
-						</div>
+							<img src="../../resource/images/<%=fac2DTO.getImg()%>"
+								class="img100" alt="<%=fac2DTO.getName()%>" />
 						</p>
+						<dl>
+							<dt><%=fac2DTO.getName()%></dt>
+							<dd><%=fac2DTO.getPhrase()%></dd>
+						</dl>
+					</li>
+					<%
+					}
+					%>
+				</ul>
 			</div>
-			<dl>
-				<dt><%=fac2DTO.getName()%></dt>
-				<dd><%=fac2DTO.getPhrase()%></dd>
-			</dl>
-			</li>
-			<%
-			} // end for
-			%>
-			</ul>
-		</div>
-
-		<div class="tour_list" id="info3">
-			<h4 class="tit_02">편의시설</h4>
-			<ul>
-				<%
-				for (ExtraFacilitiesDTO fac3DTO : fac3List) {
-				%>
-				<li>
-					<p class="img">
-					<div
-						style="width: 100px; height: 60px; background: #eee; text-align: center; line-height: 60px;">
-						<img src="../../resource/images/<%=fac3DTO.getImg()%>" />
-					</div>
-					</p>
-					<dl>
-						<dt><%=fac3DTO.getName()%></dt>
-						<dd><%=fac3DTO.getPhrase()%></dd>
-					</dl>
-				</li>
-				<%
-				} // end for
-				%>
-			</ul>
-		</div>
-		<div class="close-btn-wrap"></div>
-		</div>
+			<div class="tour_list" id="info3">
+				<h4 class="tit_02">편의시설</h4>
+				<ul>
+					<%
+					for (ExtraFacilitiesDTO fac3DTO : fac3List) {
+					%>
+					<li>
+						<p class="img">
+							<img src="../../resource/images/<%=fac3DTO.getImg()%>"
+								class="img100" alt="<%=fac3DTO.getName()%>" />
+						</p>
+						<dl>
+							<dt><%=fac3DTO.getName()%></dt>
+							<dd><%=fac3DTO.getPhrase()%></dd>
+						</dl>
+					</li>
+					<%
+					}
+					%>
+				</ul>
+			</div>
+			<div class="close-btn-wrap">
+				<button type="button" class="close-btn" onclick="window.close();">미리보기
+					닫기</button>
+			</div>
 	</main>
 </body>
 </html>

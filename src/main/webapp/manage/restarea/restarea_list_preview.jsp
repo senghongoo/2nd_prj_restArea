@@ -176,8 +176,7 @@ table { width: 100%; border-collapse: collapse; }
             </div>
          </div>
       </div>
-
-      <section class="inner">
+      <section class="inner" style="padding-bottom: 0">
          <aside>
             <h2 id="leftTitle">휴게소 목록</h2>
             <ul id="leftMenu">
@@ -253,9 +252,11 @@ table { width: 100%; border-collapse: collapse; }
                   </tbody>
                </table>
             </div>
-			
          </div>
       </section>
+			<div class="close-btn-wrap" style="margin-top: -50px">
+                <button type="button" class="btn-close" onclick="window.close();">미리보기 닫기</button>
+            </div>
    </main>
 </body>
 </html>

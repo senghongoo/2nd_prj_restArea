@@ -678,6 +678,8 @@ input:not(span>input) {
 								</div>
 							</div>
 						</div>
+						<input type="hidden" name="currentPage" id="currentPage" value="${param.currentPage}" />
+						<input type="hidden" name="keyword" id="keyword" value="${param.keyword}" />
 					</form>
 				</div>
 			</main>

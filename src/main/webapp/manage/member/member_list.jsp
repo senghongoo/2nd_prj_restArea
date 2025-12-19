@@ -1,3 +1,6 @@
+<%@page import="kr.co.sist.siteProperty.SiteProperty"%>
+<%@page import="kr.co.sist.chipher.DataDecryption"%>
+<%@page import="kr.co.sist.siteProperty.SitePropertyVO"%>
 <%@ page import="kr.co.sist.member.MemberService"%>
 <%@ page import="kr.co.sist.member.MemberManageDTO"%>
 <%@ page import="java.util.List"%>
